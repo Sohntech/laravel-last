@@ -1,0 +1,134 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  description: Documentation complète de l'API pour les contrôleurs Référenciel, Promotion, Apprenant, et User.
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:3000/api
+    description: Local server
+  - url: http://production.app/api
+    description: Production server
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /v1/auth/login:
+    post:
+      summary: Authentification de l'utilisateur
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Connexion réussie
+        '401':
+          description: Échec de l'authentification
+
+  /v1/auth/logout:
+    post:
+      summary: Déconnexion de l'utilisateur
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Déconnexion réussie
+        '401':
+          description: Non autorisé
+
+  /v1/user/register:
+    post:
+      summary: Inscription d'un nouvel utilisateur
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                nom:
+                  type: string
+                prenom:
+                  type: string
+                adresse:
+                  type: string
+                telephone:
+                  type: number
+                fonction:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                statut:
+                  type: string
+                role_id:
+                  type: integer
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Utilisateur enregistré avec succès
+        '500':
+          description: Erreur lors de l'enregistrement
+
+  /v1/users:
+    get:
+      summary: Lister les utilisateurs
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: role
+          in: query
+          description: Filtrer les utilisateurs par rôle
+          required: false
+          schema:
+            type: string
+            enum: [Admin, CM, Manager, Coach]
+      responses:
+        '200':
+          description: Liste des utilisateurs
+        '401':
+          description: Non autorisé
+
+  /v1/users/{id}:
+    patch:
+      summary: Modifier un utilisateur
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'utilisateur à modifier
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                role_id:
+                  type: integer
+      responses:
+        '200':
+          description: Utilisateur mis à jour avec succès
+        '404':
+          description: Utilisateur non trouvé
