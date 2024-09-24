@@ -27,7 +27,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose le port 9000 pour PHP-FPM
-EXPOSE 8000
+EXPOSE 9000
 
 # Lancer PHP-FPM quand le conteneur démarre
 CMD ["php-fpm"]
