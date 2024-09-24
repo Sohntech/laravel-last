@@ -26,8 +26,12 @@ RUN composer install --no-dev --optimize-autoloader
 # Permissions pour le stockage et le cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Copie le script de démarrage
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
 # Expose le port 9000 pour PHP-FPM
 EXPOSE 9000
 
-# Lancer PHP-FPM quand le conteneur démarre
-CMD ["php-fpm"]
+# Lancer le script de démarrage quand le conteneur démarre
+CMD ["sh", "/usr/local/bin/start.sh"]
