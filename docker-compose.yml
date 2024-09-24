@@ -25,8 +25,7 @@ services:
       POSTGRES_DB: your_db
       POSTGRES_USER: your_user
       POSTGRES_PASSWORD: your_password
-    ports:
-      - "5432:5432"
+  
     networks:
       - app-network
 
