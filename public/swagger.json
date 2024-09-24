@@ -1,15 +1,622 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API de gestion de dettes",
-        "version": "1.0.0",
-        "description": "API pour gérer les dettes des clients dans un magasin"
+      "title": "Gestion Apprenant API",
+      "description": "API pour la gestion des apprenants, des référentiels et des promotions",
+      "version": "1.0.0"
     },
     "servers": [
-        {
-            "url": "http://localhost:8000",
-            "description": "Serveur Local"
+      {
+        "url": "http://localhost:8000/api/v1"
+      }
+    ],
+    "paths": {
+      "/login": {
+        "post": {
+          "summary": "Login",
+          "operationId": "login",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful login",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
         }
-    ]
-}
-
+      },
+      "/logout": {
+        "post": {
+          "summary": "Logout",
+          "operationId": "logout",
+          "responses": {
+            "200": {
+              "description": "Successful logout"
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/users/forAdmin": {
+        "post": {
+          "summary": "Create a new admin user",
+          "operationId": "storeAdmin",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User created successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "summary": "List all users",
+          "operationId": "indexUsers",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of users",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "summary": "Get a user by ID",
+          "operationId": "showUser",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A user object",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update a user by ID",
+          "operationId": "updateUser",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User updated successfully"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/referentiels": {
+        "post": {
+          "summary": "Create a new referentiel",
+          "operationId": "storeReferentiel",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referentiel"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Referentiel created successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        },
+        "get": {
+          "summary": "List all referentiels",
+          "operationId": "indexReferentiels",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of referentiels",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Referentiel"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/referentiels/{id}": {
+        "get": {
+          "summary": "Get a referentiel by ID",
+          "operationId": "showReferentiel",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A referentiel object",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Referentiel"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Referentiel not found"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update a referentiel by ID",
+          "operationId": "updateReferentiel",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referentiel"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Referentiel updated successfully"
+            },
+            "404": {
+              "description": "Referentiel not found"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a referentiel by ID",
+          "operationId": "destroyReferentiel",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Referentiel deleted successfully"
+            },
+            "404": {
+              "description": "Referentiel not found"
+            }
+          }
+        }
+      },
+      "/archive/referentiels": {
+        "get": {
+          "summary": "List archived referentiels",
+          "operationId": "archivedReferentiels",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of archived referentiels",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Referentiel"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/promotions": {
+        "post": {
+          "summary": "Create a new promotion",
+          "operationId": "storePromotion",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Promotion"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Promotion created successfully"
+            },
+            "400": {
+              "description": "Bad request"
+            }
+          }
+        },
+        "get": {
+          "summary": "List all promotions",
+          "operationId": "indexPromotions",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of promotions",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Promotion"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      },
+      "/promotions/{id}": {
+        "get": {
+          "summary": "Get a promotion by ID",
+          "operationId": "showPromotion",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A promotion object",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Promotion"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Promotion not found"
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update a promotion by ID",
+          "operationId": "updatePromotion",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Promotion"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Promotion updated successfully"
+            },
+            "404": {
+              "description": "Promotion not found"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete a promotion by ID",
+          "operationId": "destroyPromotion",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Promotion deleted successfully"
+            },
+            "404": {
+              "description": "Promotion not found"
+            }
+          }
+        }
+      },
+      "/archive/promotions": {
+        "get": {
+          "summary": "List archived promotions",
+          "operationId": "archivedPromotions",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "A list of archived promotions",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Promotion"
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nom": {
+              "type": "string"
+            },
+            "prenom": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "password": {
+              "type": "string",
+              "format": "password"
+            },
+            "role": {
+              "type": "string"
+            }
+          }
+        },
+        "Referentiel": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "libelle": {
+              "type": "string"
+            }
+          }
+        },
+        "Promotion": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "annee": {
+              "type": "string"
+            },
+            "referentiel_id": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
+        }
+      }
+    }
+  }
