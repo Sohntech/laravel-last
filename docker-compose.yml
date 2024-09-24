@@ -20,11 +20,13 @@ services:
       - app-network
 
   db:
-    image: postgres
+    image: postgres:latest
     environment:
-      POSTGRES_DB: your_db
-      POSTGRES_USER: your_user
-      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: thelastecole
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
   
     networks:
       - app-network
