@@ -37,7 +37,6 @@ EXPOSE 9000
 EXPOSE 80
 
 
-
 # Lancer le script de démarrage quand le conteneur démarre
 CMD ["sh", "/usr/local/bin/start.sh"]
 
