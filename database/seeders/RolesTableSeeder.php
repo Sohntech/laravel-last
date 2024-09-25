@@ -9,7 +9,7 @@ class RolesTableSeeder extends Seeder
 {
     public function run()
     {
-        $roles = ['Admin', 'Manager', 'CM', 'Coach'];
+        $roles = ['Admin', 'Manager', 'CM', 'Coach', 'Apprenant'];
 
         // Effacer les rôles existants
         DB::table('roles')->truncate();
