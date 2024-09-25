@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://gestion-presence-laravel-6.onrender.com/api"
+            "url": "https://laravel-last.onrender.com/api"
         }
     ],
     "components": {
