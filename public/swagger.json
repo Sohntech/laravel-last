@@ -1,127 +1,939 @@
 {
-    "openapi": "3.0.3",
+    "openapi": "3.0.0",
     "info": {
-      "title": "Laravel Last API",
-      "description": "API documentation for Laravel Last project deployed on Render.",
-      "version": "1.0.0"
+        "title": "API Documentation",
+        "description": "Documentation compl\u00e8te de l'API pour les contr\u00f4leurs R\u00e9f\u00e9renciel, Promotion, Apprenant, et User.",
+        "version": "1.0.0"
     },
     "servers": [
-      {
-        "url": "https://laravel-last.onrender.com/api/v1"
-      }
+        {
+            "url": "https://laravel-last.onrender.com/api"
+        }
     ],
     "components": {
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
         }
-      }
     },
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
     "paths": {
-      "/auth/login": {
-        "post": {
-          "summary": "User login",
-          "description": "Logs in a user and returns a JWT token.",
-          "responses": {
-            "200": {
-              "description": "Successful login"
-            }
-          },
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "email": {
-                      "type": "string"
-                    },
-                    "password": {
-                      "type": "string"
+        "/v1/auth/login": {
+            "post": {
+                "summary": "Authentification de l'utilisateur",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
                     }
-                  },
-                  "required": ["email", "password"]
-                }
-              }
-            }
-          }
-        }
-      },
-      "/users/register": {
-        "post": {
-          "summary": "Register a new user",
-          "description": "Registers a user with form-data for file upload.",
-          "requestBody": {
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "nom": { "type": "string" },
-                    "prenom": { "type": "string" },
-                    "email": { "type": "string" },
-                    "password": { "type": "string" },
-                    "adresse": { "type": "string" },
-                    "telephone": { "type": "string" },
-                    "statut": { "type": "string" },
-                    "photo": {
-                      "type": "string",
-                      "format": "binary"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Connexion r\u00e9ussie"
                     },
-                    "fonction": { "type": "string" }
-                  },
-                  "required": ["nom", "prenom", "email", "password", "adresse", "telephone", "statut", "photo", "fonction"]
+                    "401": {
+                        "description": "\u00c9chec de l'authentification"
+                    }
                 }
-              }
             }
-          },
-          "responses": {
-            "200": {
-              "description": "User registered successfully"
+        },
+        "/v1/auth/logout": {
+            "post": {
+                "summary": "D\u00e9connexion de l'utilisateur",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "D\u00e9connexion r\u00e9ussie"
+                    },
+                    "401": {
+                        "description": "Non autoris\u00e9"
+                    }
+                }
             }
-          }
+        },
+        "/v1/user/register": {
+            "post": {
+                "summary": "Inscription d'un nouvel utilisateur",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "adresse": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "number"
+                                    },
+                                    "fonction": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "statut": {
+                                        "type": "string"
+                                    },
+                                    "role_id": {
+                                        "type": "integer"
+                                    },
+                                    "photo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Utilisateur enregistr\u00e9 avec succ\u00e8s"
+                    },
+                    "500": {
+                        "description": "Erreur lors de l'enregistrement"
+                    }
+                }
+            }
+        },
+        "/v1/users": {
+            "get": {
+                "summary": "Lister les utilisateurs",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Filtrer les utilisateurs par r\u00f4le",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["Admin", "CM", "Manager", "Coach"]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des utilisateurs"
+                    },
+                    "401": {
+                        "description": "Non autoris\u00e9"
+                    }
+                }
+            }
+        },
+        "/v1/users/{id}": {
+            "patch": {
+                "summary": "Modifier un utilisateur",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de l'utilisateur \u00e0 modifier",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "role_id": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur mis \u00e0 jour avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouv\u00e9"
+                    }
+                }
+            }
+        },
+        "/v1/referentiels": {
+            "post": {
+                "summary": "Cr\u00e9er un nouveau r\u00e9f\u00e9rentiel",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "statut": {
+                                        "type": "string"
+                                    },
+                                    "competences": {
+                                        "type": "string"
+                                    },
+                                    "photo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "R\u00e9f\u00e9rentiel cr\u00e9\u00e9 avec succ\u00e8s"
+                    },
+                    "422": {
+                        "description": "Erreurs de validation"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la cr\u00e9ation"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lister les r\u00e9f\u00e9rentiels",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "statut",
+                        "in": "query",
+                        "description": "Filtrer les r\u00e9f\u00e9rentiels par statut",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["Actif", "Inactif"]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des r\u00e9f\u00e9rentiels"
+                    }
+                }
+            }
+        },
+        "/v1/referentiels/{id}": {
+            "patch": {
+                "summary": "Mise \u00e0 jour des informations du r\u00e9f\u00e9rentiel",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID du r\u00e9f\u00e9rentiel \u00e0 mettre \u00e0 jour",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "libelle": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "code": {
+                                        "type": "string"
+                                    },
+                                    "statut": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "R\u00e9f\u00e9rentiel mis \u00e0 jour avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "R\u00e9f\u00e9rentiel non trouv\u00e9"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la mise \u00e0 jour"
+                    }
+                }
+            }
+        },
+        "/v1/referentiels/{id}/competences": {
+            "post": {
+                "summary": "Ajouter une comp\u00e9tence au r\u00e9f\u00e9rentiel",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID du r\u00e9f\u00e9rentiel",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "competence": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comp\u00e9tence ajout\u00e9e avec succ\u00e8s"
+                    },
+                    "400": {
+                        "description": "Erreurs de validation"
+                    },
+                    "500": {
+                        "description": "Erreur lors de l'ajout"
+                    }
+                }
+            }
+        },
+        "/v1/referentiels/{id}/competences/{competenceId}/modules": {
+            "post": {
+                "summary": "Ajouter un module \u00e0 une comp\u00e9tence",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID du r\u00e9f\u00e9rentiel",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "competenceId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la comp\u00e9tence",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "module": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Module ajout\u00e9 avec succ\u00e8s"
+                    },
+                    "400": {
+                        "description": "Erreurs de validation"
+                    },
+                    "500": {
+                        "description": "Erreur lors de l'ajout"
+                    }
+                }
+            }
+        },
+        "/v1/referentiels/{id}/competences/{competenceId}": {
+            "delete": {
+                "summary": "Supprimer une comp\u00e9tence du r\u00e9f\u00e9rentiel",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID du r\u00e9f\u00e9rentiel",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "competenceId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la comp\u00e9tence \u00e0 supprimer",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comp\u00e9tence supprim\u00e9e avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Comp\u00e9tence non trouv\u00e9e"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la suppression"
+                    }
+                }
+            }
+        },
+        "/v1/referentiels/{id}/competences/{competenceId}/modules/{moduleId}": {
+            "delete": {
+                "summary": "Supprimer un module d'une comp\u00e9tence",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID du r\u00e9f\u00e9rentiel",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "competenceId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la comp\u00e9tence",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "moduleId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID du module \u00e0 supprimer",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Module supprim\u00e9 avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Module non trouv\u00e9"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la suppression"
+                    }
+                }
+            }
+        },
+        "/v1/referentiels/{id}/soft-delete": {
+            "delete": {
+                "summary": "Soft delete d'un r\u00e9f\u00e9rentiel",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID du r\u00e9f\u00e9rentiel \u00e0 supprimer",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "R\u00e9f\u00e9rentiel supprim\u00e9 avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "R\u00e9f\u00e9rentiel non trouv\u00e9"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la suppression"
+                    }
+                }
+            }
+        },
+        "/v1/archive/referentiels": {
+            "get": {
+                "summary": "R\u00e9cup\u00e9rer les r\u00e9f\u00e9rentiels supprim\u00e9s",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des r\u00e9f\u00e9rentiels supprim\u00e9s"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la r\u00e9cup\u00e9ration"
+                    }
+                }
+            }
+        },
+        "/v1/promotions": {
+            "post": {
+                "summary": "Cr\u00e9er une promotion",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Promotion cr\u00e9\u00e9e avec succ\u00e8s"
+                    },
+                    "400": {
+                        "description": "Erreurs de validation"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la cr\u00e9ation"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Lister toutes les promotions",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des promotions"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la r\u00e9cup\u00e9ration"
+                    }
+                }
+            }
+        },
+        "/v1/promotions/{id}": {
+            "patch": {
+                "summary": "Mettre \u00e0 jour une promotion",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la promotion \u00e0 mettre \u00e0 jour",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Promotion mise \u00e0 jour avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Promotion non trouv\u00e9e"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la mise \u00e0 jour"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Supprimer une promotion",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la promotion \u00e0 supprimer",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Promotion supprim\u00e9e avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Promotion non trouv\u00e9e"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la suppression"
+                    }
+                }
+            }
+        },
+        "/v1/promotions/deleted": {
+            "get": {
+                "summary": "R\u00e9cup\u00e9rer les promotions supprim\u00e9es",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des promotions supprim\u00e9es"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la r\u00e9cup\u00e9ration"
+                    }
+                }
+            }
+        },
+        "/v1/promotions/{id}/cloturer": {
+            "patch": {
+                "summary": "Cl\u00f4turer une promotion",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la promotion \u00e0 cl\u00f4turer",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Promotion cl\u00f4tur\u00e9e avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Promotion non trouv\u00e9e"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la cl\u00f4ture"
+                    }
+                }
+            }
+        },
+        "/v1/promotions/encours": {
+            "get": {
+                "summary": "R\u00e9cup\u00e9rer les promotions en cours",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des promotions en cours"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la r\u00e9cup\u00e9ration"
+                    }
+                }
+            }
+        },
+        "/v1/promotions/{id}/referentiels": {
+            "patch": {
+                "summary": "Mettre \u00e0 jour les r\u00e9f\u00e9rentiels d'une promotion",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la promotion",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "referentiels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "R\u00e9f\u00e9rentiels mis \u00e0 jour avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Promotion non trouv\u00e9e"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la mise \u00e0 jour"
+                    }
+                }
+            }
+        },
+        "/v1/promotions/{id}/etat": {
+            "patch": {
+                "summary": "Mettre \u00e0 jour l'\u00e9tat d'une promotion",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID de la promotion",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "etat": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "\u00c9tat de la promotion mis \u00e0 jour avec succ\u00e8s"
+                    },
+                    "404": {
+                        "description": "Promotion non trouv\u00e9e"
+                    },
+                    "500": {
+                        "description": "Erreur lors de la mise \u00e0 jour"
+                    }
+                }
+            }
+        },
+        "/v1/apprenants": {
+            "post": {
+                "summary": "Inscrire un nouvel apprenant",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "telephone": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Apprenant inscrit avec succ\u00e8s"
+                    },
+                    "400": {
+                        "description": "Erreurs de validation"
+                    },
+                    "500": {
+                        "description": "Erreur lors de l'inscription"
+                    }
+                }
+            }
         }
-      },
-      "/users/update": {
-        "get": {
-          "summary": "Update a user",
-          "description": "Gets details to update a user.",
-          "responses": {
-            "200": {
-              "description": "User update data retrieved"
-            }
-          }
-        }
-      },
-      "/users": {
-        "get": {
-          "summary": "Get all users",
-          "description": "Retrieves a list of all users.",
-          "responses": {
-            "200": {
-              "description": "List of users retrieved"
-            }
-          }
-        }
-      },
-      "/users/filterByRole": {
-        "get": {
-          "summary": "Filter users by role",
-          "description": "Filters users based on their role.",
-          "responses": {
-            "200": {
-              "description": "Filtered users list"
-            }
-          }
-        }
-      }
     }
-  }
-  
+}
