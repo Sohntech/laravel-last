@@ -10,8 +10,13 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     nginx \
-    postgresql-client \
+    postgresql-client \   
     && docker-php-ext-install pdo pdo_pgsql zip
+
+# Configurer Nginx
+COPY nginx/default.conf /etc/nginx/sites-available/default
+RUN rm -f /etc/nginx/sites-enabled/default && \
+    ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Installe Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -32,12 +37,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-# Expose le port 9000 pour PHP-FPM
-EXPOSE 9000
+# Expose le port 80 pour Nginx et le port 9000 pour PHP-FPM
 EXPOSE 80
-
+EXPOSE 9000
 
 # Lancer le script de démarrage quand le conteneur démarre
 CMD ["sh", "/usr/local/bin/start.sh"]
-
-
