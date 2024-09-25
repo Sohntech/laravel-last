@@ -13,7 +13,7 @@ services:
       - APP_ENV=local
       - APP_KEY=base64:+FEr5+Ql3DYdcBqF4KbOGyVzU/lDsvNLaH5749QUHaE=
       - APP_DEBUG=true
-      - APP_URL=http://localhost
+      - APP_URL=http://app:9000
       
       - DB_CONNECTION=pgsql
       - DB_HOST=pgsql
