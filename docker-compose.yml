@@ -20,7 +20,7 @@ services:
       - LOG_LEVEL=debug
       
       - DB_CONNECTION=pgsql
-      - DB_HOST=db
+      - DB_HOST=pgsql
       - DB_PORT=5432
       - DB_DATABASE=thelastecole
       - DB_USERNAME=postgres
@@ -85,7 +85,7 @@ services:
     networks:
       - app-network
 
-  db:
+  pgsql:
     image: postgres:14
     environment:
       POSTGRES_DB: thelastecole
