@@ -8,6 +8,12 @@ services:
       - .:/var/www/html
     networks:
       - app-network
+    environment:
+      - FIREBASE_CREDENTIALS=/var/www/html/gestion-pedagogique-laravel.json
+      - FIREBASE_DATABASE_URL=https://gestion-pedagogique-laravel-default-rtdb.firebaseio.com/
+      - FIREBASE_API_KEY=AIzaSyBgXAEvu7TJAlCJXL8oOGX-e55wAyJNlg4
+      - FIREBASE_STORAGE_BUCKET=gs://gestion-pedagogique-laravel.appspot.com
+      # Ajoutez ici d'autres variables d'environnement nécessaires
 
   webserver:
     image: nginx:latest
@@ -27,7 +33,6 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
-  
     networks:
       - app-network
 
