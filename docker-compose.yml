@@ -20,13 +20,13 @@ services:
       - LOG_LEVEL=debug
       
       - DB_CONNECTION=pgsql
-      - DB_HOST=172.31.0.2
+      - DB_HOST=pgsql
       - DB_PORT=5432
       - DB_DATABASE=thelastecole
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
       
-      - FIREBASE_CREDENTIALS=/var/www/html/gestion-pedagogique-laravel.json
+      - FIREBASE_CREDENTIALS=gestion-pedagogique-laravel.json
       - FIREBASE_DATABASE_URL=https://gestion-pedagogique-laravel-default-rtdb.firebaseio.com/
       - FIREBASE_API_KEY=AIzaSyBgXAEvu7TJAlCJXL8oOGX-e55wAyJNlg4
       - FIREBASE_STORAGE_BUCKET=gs://gestion-pedagogique-laravel.appspot.com
@@ -86,7 +86,7 @@ services:
       - app-network
 
   pgsql:
-    image: postgres:14
+    image: postgres:14.13
     container_name: gestion-pdagogique-laravel-last-pgsql-1
     environment:
       POSTGRES_DB: thelastecole

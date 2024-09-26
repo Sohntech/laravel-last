@@ -24,7 +24,7 @@ Route::middleware('auth:api')->prefix('v1/auth')->group(function () {
 
 
 
-Route::middleware('auth:api')->prefix('v1')->group(function () {
+// Route::middleware('auth:api')->prefix('v1')->group(function () {
     Route::post('/user/register', [UserController::class, 'register']);
     Route::get('/users', [UserController::class, 'index']);
     
@@ -37,7 +37,7 @@ Route::get('/users/role/{roleName}', [UserController::class, 'getUsersByRole']);
 
 Route::post('/referentiels', [ReferencielController::class, 'store']);  
 
-});
+// });
 
 
 
