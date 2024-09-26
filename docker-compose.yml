@@ -20,7 +20,7 @@ services:
       - LOG_LEVEL=debug
       
       - DB_CONNECTION=pgsql
-      - DB_HOST=pgsql
+      - DB_HOST=gestion-pdagogique-laravel-last-pgsql-1
       - DB_PORT=5432
       - DB_DATABASE=thelastecole
       - DB_USERNAME=postgres
