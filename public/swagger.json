@@ -1,13 +1,13 @@
 {
     "openapi": "3.0.3",
     "info": {
-        "title": "API Documentation",
-        "description": "Documentation compl\u00e8te de l'API pour les contr\u00f4leurs R\u00e9f\u00e9renciel, Promotion, Apprenant, et User.",
+        "title": "API Docu",
+        "description": "Application de gestion d'apprenant",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "https://laravel-last.onrender.com/api"
+            "url": "https://ndiaga-lo.onrender.com/api"
         }
     ],
     "components": {
