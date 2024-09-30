@@ -69,7 +69,7 @@
                 }
             }
         },
-        "/v1/user/register": {
+        "/user/register": {
             "post": {
                 "summary": "Inscription d'un nouvel utilisateur",
                 "security": [
