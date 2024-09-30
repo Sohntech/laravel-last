@@ -67,6 +67,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            
             // Récupérer l'utilisateur localement
             $user = $this->userRepository->find($id);
             if (!$user) {

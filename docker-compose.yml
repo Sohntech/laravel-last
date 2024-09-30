@@ -8,6 +8,8 @@ services:
       - .:/var/www/html
     networks:
       - app-network
+    depends_on:
+      - pgsql  # Dépendance ajoutée
     environment:
       - APP_NAME=Laravel
       - APP_ENV=local
