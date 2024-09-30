@@ -34,7 +34,7 @@ services:
     image: postgres:14.13
     container_name: gestion-pdagogique-laravel-last-pgsql-1
     environment:
-      POSTGRES_DB: thelastecole
+      POSTGRES_DB: faly
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     
